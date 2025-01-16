@@ -1,0 +1,12 @@
+import { useState } from 'react'
+import './index.css'
+
+function App() {
+  return(
+    <div className="">
+      <button className="bg-indigo-500 hover:bg-indigo-600 text-white ">Sign Up with Google</button>
+    </div>
+  );  
+}
+
+export default App
