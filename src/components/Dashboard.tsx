@@ -22,6 +22,7 @@ const Dashboard = () => {
           const data = await response.json();
           console.log('User data:', data);
           setUser(data);
+          localStorage.setItem('status', 'active');
         } else {
           const errorText = await response.text();
           setError(errorText);
@@ -49,6 +50,7 @@ const Dashboard = () => {
 
       if(response.redirected){
         navigate('/');
+        localStorage.removeItem('status');
       }
       else{
         setError('Error Logging Out');
