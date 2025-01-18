@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ProfileBar from './ProfileBar';
+import Users from './Users';
+import Chatbox from './Chatbox';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -12,62 +16,49 @@ const Dashboard = () => {
         const response = await fetch('http://localhost:8000/auth/user', {
           credentials: 'include',
           headers: {
-            'Accept': 'application/json'
-          }
+            Accept: 'application/json',
+          },
         });
-        
-        console.log('Response status:', response.status);
-        
-        if (response.ok) {
-          const data = await response.json();
-          console.log('User data:', data);
-          setUser(data);
-          localStorage.setItem('status', 'active');
-        } else {
+
+        if (!response.ok) {
           const errorText = await response.text();
-          setError(errorText);
-          navigate('/');
-          console.log('Authentication failed:', errorText);
+          throw new Error(errorText);
         }
+
+        const data = await response.json();
+        setUser(data); // Assume `data` includes the user object with `name` property.
+        localStorage.setItem('status', 'active');
       } catch (err) {
         setError(err.message);
         console.error('Fetch error:', err);
+        navigate('/');
       }
     };
 
     fetchUser();
-  }, []);
+  }, [navigate]);
 
-  if (error) return <div>Error: {error}</div>;
-  if (!user) return <div>Loading...</div>;
+  if (error) {
+    return <div className="text-red-500 p-4">Error: {error}</div>;
+  }
 
-  const handleLogOut = async () => {
-    try{
-      let response = await fetch('http://localhost:8000/auth/logout', {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if(response.redirected){
-        navigate('/');
-        localStorage.removeItem('status');
-      }
-      else{
-        setError('Error Logging Out');
-      }
-    }
-    catch(err){
-      console.log(err.message);
-    }
+  if (!user) {
+    return <div className="p-4">Loading...</div>;
   }
 
   return (
-    <div>
-      <p>Welcome, {user.name || 'Guest'}</p>
-      <a href="#" onClick={handleLogOut}>Log Out</a>
-      <p>{error}</p>
+    <>
+      <ProfileBar user={user} />
+      <div className="p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
+        <Users onUserSelect={setSelectedUser} user={user.name} />
+        <Chatbox selectedUserChat={selectedUser} user={user} />
+      </div>
     </div>
+
+    </>
   );
 };
 
 export default Dashboard;
+
