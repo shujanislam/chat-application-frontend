@@ -1,20 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
-const ProfileSettings = () => {
+const ProfileSettings = ({ user }) => { // Destructure user prop
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
-
   const handleLogOut = async () => {
     try {
-      const response = await fetch('http://localhost:8000/auth/logout', {
+      const response = await fetch(`http://localhost:8000/auth/logout/${user}`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -35,7 +34,7 @@ const ProfileSettings = () => {
     return <div className="text-red-500 p-4">Error: {error}</div>;
   }
 
-  return(
+  return (
     <div className="relative inline-block text-left">
       {/* Settings Button */}
       <button
@@ -72,6 +71,7 @@ const ProfileSettings = () => {
       )}
     </div>
   );
-}
+};
 
 export default ProfileSettings;
+

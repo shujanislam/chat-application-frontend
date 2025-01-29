@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 
 const Users = ({ user, onUserSelect }) => {
-  const [names, setNames] = useState([]);
-  const [status, setStatus] = useState();
+  const [users, setUsers] = useState([]); // Store users as an array of objects
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNames = async () => {
+    const fetchUsers = async () => {
       if (!user) return;
 
       try {
@@ -17,30 +16,30 @@ const Users = ({ user, onUserSelect }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ currentUser: user }), // Renamed to be more explicit
+          body: JSON.stringify({ currentUser: user }), // Send current user
         });
 
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
-            setNames(data.names);
-            console.log(data); 
+            setUsers(data.data); // Use the `data` array from the API response
+            console.log(data.data);
           } else {
-            setError(data.message || 'Failed to fetch names');
+            setError(data.message || 'Failed to fetch users');
           }
         } else {
-          setError('Failed to fetch names. Server responded with an error.');
+          setError('Failed to fetch users. Server responded with an error.');
         }
       } catch (error) {
-        setError('An error occurred while fetching names.');
+        setError('An error occurred while fetching users.');
         console.error(error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchNames();
-  }, [user]); // Add user as dependency
+    fetchUsers();
+  }, [user]);
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
@@ -53,15 +52,20 @@ const Users = ({ user, onUserSelect }) => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Users List</h2>
-      {names.length > 0 ? (
+      {users.length > 0 ? (
         <ul className="space-y-2">
-          {names.map((name, index) => (
+          {users.map(({ name, status }, index) => (
             <li 
               key={index}
               className="cursor-pointer hover:bg-gray-100 p-2 rounded"
               onClick={() => onUserSelect(name)}
             >
-              <span>{name}</span>
+              <div className="flex justify-between">
+                <span>{name}</span>
+                <span className={`text-sm ${status === 'online' ? 'text-green-500' : 'text-gray-500'}`}>
+                  {status}
+                </span>
+              </div>
             </li>
           ))}
         </ul>
@@ -73,3 +77,4 @@ const Users = ({ user, onUserSelect }) => {
 };
 
 export default Users;
+
