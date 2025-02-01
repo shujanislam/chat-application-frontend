@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import ProfileBar from './ProfileBar';
 import Users from './Users';
 import Chatbox from './Chatbox';
+import Friends from './Friends';
+import AddFriends from './AddFriends';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -52,6 +54,8 @@ const Dashboard = () => {
       <div className="p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
         <Users onUserSelect={setSelectedUser} user={user.name} />
+        <Friends userFriend={user.name}/>
+        <AddFriends user={user.name}/>
         <Chatbox selectedUserChat={selectedUser} user={user} />
       </div>
     </div>
