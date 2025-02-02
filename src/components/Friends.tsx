@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const Friends = ({ userFriend }) => {
+const Friends = ({ userFriend, onUserSelect }) => {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -51,7 +51,7 @@ const Friends = ({ userFriend }) => {
       {friends.length > 0 ? (
         <ul className="space-y-2">
           {friends.map(({ name, status }, index) => (
-            <li key={index} className="cursor-pointer hover:bg-gray-100 p-2 rounded">
+            <li key={index} className="cursor-pointer hover:bg-gray-100 p-2 rounded" onClick={() => onUserSelect(name)}>
               <div className="flex justify-between">
                 <span>{name}</span>
                 <span className={`text-sm ${status === 'online' ? 'text-green-500' : 'text-gray-500'}`}>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileBar from './ProfileBar';
-import Users from './Users';
 import Chatbox from './Chatbox';
 import Friends from './Friends';
 import AddFriends from './AddFriends';
@@ -53,8 +52,7 @@ const Dashboard = () => {
       <ProfileBar user={user} />
       <div className="p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
-        <Users onUserSelect={setSelectedUser} user={user.name} />
-        <Friends userFriend={user.name}/>
+        <Friends userFriend={user.name} onUserSelect={setSelectedUser}/>
         <AddFriends user={user.name}/>
         <Chatbox selectedUserChat={selectedUser} user={user} />
       </div>
