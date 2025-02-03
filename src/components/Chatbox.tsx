@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { io } from 'socket.io-client';
 
-const Chatbox = ({user, selectedUserChat}) => {
+const Chatbox = ({ user, selectedUserChat }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
@@ -14,7 +14,7 @@ const Chatbox = ({user, selectedUserChat}) => {
     }
     return () => {
       newSocket.close();
-    }; 
+    };
   }, [user?.name]);
 
   useEffect(() => {
@@ -40,45 +40,48 @@ const Chatbox = ({user, selectedUserChat}) => {
       const messageData = {
         sender: user.name,
         recipient: selectedUserChat,
-        message: message.trim()
+        message: message.trim(),
       };
-      
+
       // Send to server
       socket.emit('private_message', messageData);
-      
+
       // Clear input
       setMessage('');
     }
   };
 
   return (
-    <div className="flex flex-col w-full max-w-md h-[500px] border border-gray-300 rounded-lg shadow-md bg-white">
-      <div className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-t-lg">
+    <div className="flex flex-col w-full h-full">
+      {/* Header with white background and black text */}
+      <div className="px-4 py-2 bg-white text-black font-semibold rounded-t-lg border-b border-gray-200">
         {selectedUserChat ? `Chat with ${selectedUserChat}` : 'Select a user to start chatting'}
       </div>
 
-      <div className="flex-1 p-4 overflow-y-auto space-y-2">
+      {/* Messages Container */}
+      <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50">
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-2 rounded-lg ${
+            className={`p-3 rounded-lg max-w-xs ${
               msg.sender === user?.name
-                ? 'bg-blue-100 text-right'
-                : 'bg-gray-100 text-left'
+                ? 'bg-blue-100 text-right self-end'  // Sender's messages on the right
+                : 'bg-gray-100 text-left self-start'  // Receiver's messages on the left
             }`}
           >
-            <p className="font-bold">{msg.sender}</p>
-            <p>{msg.message}</p>
+            <p className="font-semibold text-sm">{msg.sender}</p>
+            <p className="text-sm">{msg.message}</p>
           </div>
         ))}
       </div>
 
+      {/* Message Input Section */}
       {selectedUserChat && (
-        <div className="flex items-center px-4 py-2 border-t border-gray-300">
+        <div className="flex items-center px-4 py-2 border-t border-gray-300 bg-white">
           <textarea
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 p-2 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-100"
             rows={1}
-            placeholder="Message..."
+            placeholder="Type your message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={(e) => {
@@ -89,7 +92,7 @@ const Chatbox = ({user, selectedUserChat}) => {
             }}
           />
           <button
-            className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
             onClick={sendMessage}
           >
             Send
@@ -101,3 +104,4 @@ const Chatbox = ({user, selectedUserChat}) => {
 };
 
 export default Chatbox;
+

@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProfileBar from './ProfileBar';
 import Chatbox from './Chatbox';
-import Friends from './Friends';
 import AddFriends from './AddFriends';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [userId, setUserId] = useState('');
+  const [selectedUserChat, setSelectedUserChat] = useState(null);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -27,7 +27,8 @@ const Dashboard = () => {
         }
 
         const data = await response.json();
-        setUser(data); // Assume `data` includes the user object with `name` property.
+        setUser(data.user);
+        setUserId(data.user_id);
         localStorage.setItem('status', 'active');
       } catch (err) {
         setError(err.message);
@@ -48,17 +49,17 @@ const Dashboard = () => {
   }
 
   return (
-    <>
-      <ProfileBar user={user} />
-      <div className="p-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> 
-        <Friends userFriend={user.name} onUserSelect={setSelectedUser}/>
-        <AddFriends user={user.name}/>
-        <Chatbox selectedUserChat={selectedUser} user={user} />
+    <div className="flex h-screen">
+      {/* Left ProfileBar Section */}
+      <div className="w-72 bg-slate-800">
+        <ProfileBar user={user} userId={userId} setSelectedUserChat={setSelectedUserChat} />
+      </div>
+
+      {/* Right Chatbox Section - This takes 100% of the screen height */}
+      <div className="flex-1 bg-white p-4 overflow-y-auto h-full">
+        <Chatbox user={user} selectedUserChat={selectedUserChat} />
       </div>
     </div>
-
-    </>
   );
 };
 

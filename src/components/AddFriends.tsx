@@ -19,7 +19,7 @@ const AddFriends = ({ user }) => {
         body: JSON.stringify({ friendId }),
       });
 
-      const data = await response.json(); // Await the response data
+      const data = await response.json();
 
       if (response.ok) {
         setMessage({ type: "success", text: "Friend added successfully!" });
@@ -34,13 +34,12 @@ const AddFriends = ({ user }) => {
   };
 
   return (
-    <div className="p-4 w-80 bg-white rounded-2xl shadow-md">
-      <h2 className="text-lg font-semibold mb-3">Add Friend</h2>
+    <div className="p-4 bg-slate-800 rounded-lg">
       <div className="flex space-x-2">
         <input
           type="text"
           placeholder="#friend_id"
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={friendId}
           onChange={(e) => setFriendId(e.target.value)}
         />

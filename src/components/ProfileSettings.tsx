@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Cog6ToothIcon } from '@heroicons/react/24/outline';
 
-const ProfileSettings = ({ user }) => { // Destructure user prop
+const ProfileSettings = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const ProfileSettings = ({ user }) => { // Destructure user prop
   }
 
   return (
-    <div className="relative inline-block text-left">
+    <div className="relative">
       {/* Settings Button */}
       <button
         onClick={toggleDropdown}
@@ -46,7 +46,7 @@ const ProfileSettings = ({ user }) => { // Destructure user prop
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
+        <div className="absolute top-0 right-0 translate-x-2 transform -translate-y-full bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 w-48">
           <div className="py-1">
             <button
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"

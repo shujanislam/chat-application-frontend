@@ -38,34 +38,42 @@ const Friends = ({ userFriend, onUserSelect }) => {
   }, [userFriend]);
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="text-red-500 text-xs">{error}</div>;
   }
 
   if (loading) {
-    return <div>Loading friends...</div>;
+    return <div className="text-gray-300 text-xs">Loading friends...</div>;
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Friends List</h2>
+    <div className="p-2">
+      <h2 className="text-sm font-semibold mb-3 text-gray-300">Friends</h2>
       {friends.length > 0 ? (
-        <ul className="space-y-2">
+        <ul className="space-y-1">
           {friends.map(({ name, status }, index) => (
-            <li key={index} className="cursor-pointer hover:bg-gray-100 p-2 rounded" onClick={() => onUserSelect(name)}>
-              <div className="flex justify-between">
-                <span>{name}</span>
-                <span className={`text-sm ${status === 'online' ? 'text-green-500' : 'text-gray-500'}`}>
-                  {status}
-                </span>
+            <li
+              key={index}
+              className="cursor-pointer hover:bg-gray-700 p-1 rounded flex items-center justify-between text-xs"
+              onClick={() => onUserSelect(name)}
+            >
+              <span className="text-gray-200">{name}</span>
+              <div className="flex items-center">
+                <span className="text-gray-400">{status}</span>
+                <span
+                  className={`w-2 h-2 ml-1 rounded-full ${
+                    status === 'online' ? 'bg-green-500' : 'bg-gray-500'
+                  }`}
+                ></span>
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p>No friends found</p>
+        <p className="text-gray-400 text-xs">No friends found</p>
       )}
     </div>
   );
 };
 
 export default Friends;
+
