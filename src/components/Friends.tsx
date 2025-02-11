@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 const Friends = ({ userFriend, onUserSelect }) => {
   const [friends, setFriends] = useState([]);
@@ -61,7 +61,13 @@ const Friends = ({ userFriend, onUserSelect }) => {
                 <span className="text-gray-400">{status}</span>
                 <span
                   className={`w-2 h-2 ml-1 rounded-full ${
-                    status === 'online' ? 'bg-green-500' : 'bg-gray-500'
+                    status === "online"
+                      ? "bg-green-500"
+                      : status === "dnd"
+                      ? "bg-red-500"
+                      : status === "idle"
+                      ? "bg-yellow-500"
+                      : "bg-gray-500"
                   }`}
                 ></span>
               </div>
@@ -76,4 +82,3 @@ const Friends = ({ userFriend, onUserSelect }) => {
 };
 
 export default Friends;
-

@@ -106,7 +106,6 @@ const Chatbox = ({ user, selectedUserChat }) => {
           </div>
         ))}
       </div> 
-  
       {/* Typing Indicator */}
       {isTyping && <p className="text-gray-500 text-sm italic">{selectedUserChat} is typing...</p>}
       {/* Message Input Section */}
