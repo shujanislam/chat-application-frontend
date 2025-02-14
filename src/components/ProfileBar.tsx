@@ -2,6 +2,7 @@ import { useState } from "react";
 import ProfileSettings from "./ProfileSettings";
 import Friends from "./Friends";
 import AddFriends from "./AddFriends";
+import SearchBar from './SearchBar';
 
 const ProfileBar = ({ user, userId, setSelectedUserChat }) => {
   if (!user) {
@@ -15,7 +16,7 @@ const ProfileBar = ({ user, userId, setSelectedUserChat }) => {
         <p className="text-lg font-semibold">{user.name || "Guest"}</p>
         <p className="text-xs text-gray-400">#{userId}</p>
       </div>
-
+       <SearchBar user={user.name}/>
       {/* Middle Section: Friends List */}
       <div className="flex-1 overflow-y-auto w-full">
         <Friends userFriend={user.name} onUserSelect={(selectedUser) => setSelectedUserChat(selectedUser)} />
@@ -35,4 +36,3 @@ const ProfileBar = ({ user, userId, setSelectedUserChat }) => {
 };
 
 export default ProfileBar;
-

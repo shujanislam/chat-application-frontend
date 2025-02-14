@@ -39,7 +39,7 @@ const AddFriends = ({ user }) => {
         <input
           type="text"
           placeholder="#friend_id"
-          className="w-full p-2 border rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 rounded-lg bg-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           value={friendId}
           onChange={(e) => setFriendId(e.target.value)}
         />
