@@ -5,6 +5,7 @@ import AddFriends from "./AddFriends";
 import SearchBar from './SearchBar';
 
 const ProfileBar = ({ user, userId, setSelectedUserChat }) => {
+
   if (!user) {
     return <div className="p-4">Loading...</div>;
   }

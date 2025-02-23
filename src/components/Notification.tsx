@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
-const Notification = ({ sender, message, onClose }) => {
+const CustomNotification = ({ sender, message, onClose }) => {
   useEffect(() => {
-    // Auto-hide notification after 5 seconds
+    // Auto-hide notification after 2 seconds
     const timer = setTimeout(() => {
       onClose();
     }, 2000);
@@ -19,4 +19,4 @@ const Notification = ({ sender, message, onClose }) => {
   );
 };
 
-export default Notification;
+export default CustomNotification;

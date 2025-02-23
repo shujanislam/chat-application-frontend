@@ -1,33 +1,40 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Cog6ToothIcon } from '@heroicons/react/24/outline';
-import StatusMenu from './StatusMenu'; // Import the new StatusMenu component
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import StatusMenu from "./StatusMenu";
+import Profile from "./Profile"; // Import the Profile modal component
 
 const ProfileSettings = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // Profile modal state
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const toggleDropdown = () => setIsOpen(!isOpen);
   const toggleStatusMenu = () => setIsStatusOpen(!isStatusOpen);
+  const openProfile = () => {
+    setIsProfileOpen(true);
+    setIsOpen(false); // Close the dropdown when profile modal opens
+  };
+  const closeProfile = () => setIsProfileOpen(false);
 
   const handleLogOut = async () => {
     try {
       const response = await fetch(`http://localhost:8000/auth/logout/${user}`, {
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        credentials: "include",
       });
 
       if (response.ok || response.redirected) {
-        localStorage.removeItem('status');
-        navigate('/');
+        localStorage.removeItem("status");
+        navigate("/");
       } else {
-        setError('Error logging out');
+        setError("Error logging out");
       }
     } catch (err) {
-      setError('Error logging out: ' + err.message);
-      console.error('Logout error:', err);
+      setError("Error logging out: " + err.message);
+      console.error("Logout error:", err);
     }
   };
 
@@ -49,7 +56,10 @@ const ProfileSettings = ({ user }) => {
       {isOpen && (
         <div className="absolute top-0 right-0 translate-x-2 transform -translate-y-full bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 w-48">
           <div className="py-1">
-            <button className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+            <button
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              onClick={openProfile}
+            >
               Profile
             </button>
             <button
@@ -71,7 +81,10 @@ const ProfileSettings = ({ user }) => {
         </div>
       )}
 
-      {/* Status Menu (Appears when clicking "Status") */}
+      {/* Profile Modal */}
+      {isProfileOpen && <Profile user={user} isOpen={isProfileOpen} onClose={closeProfile} />}
+
+      {/* Status Menu */}
       {isStatusOpen && <StatusMenu onClose={() => setIsStatusOpen(false)} user={user} />}
     </div>
   );
