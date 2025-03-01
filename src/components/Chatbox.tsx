@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import CustomNotification from './Notification'
+import MessageMenu from "./TextOptions"; // Import the pop-up menu component
+import CustomNotification from "./Notification";
 
 const Chatbox = ({ user, selectedUserChat }) => {
   const [message, setMessage] = useState("");
@@ -9,6 +10,11 @@ const Chatbox = ({ user, selectedUserChat }) => {
   const [notification, setNotification] = useState(null);
   const [file, setFile] = useState(null);
   const [fileURL, setFileURL] = useState(null);
+
+  // State for menu visibility & position
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [selectedMessage, setSelectedMessage] = useState(null);
 
   useEffect(() => {
     const newSocket = io("http://localhost:8000");
@@ -29,7 +35,6 @@ const Chatbox = ({ user, selectedUserChat }) => {
     socket.on("receive_message", ({ sender, recipient, message }) => {
       if (sender === selectedUserChat || recipient === selectedUserChat) {
         setMessages((prevMessages) => {
-          // Prevent duplicate bot responses
           if (sender === "Bot" && prevMessages.some((msg) => msg.sender === "Bot" && msg.message === message)) {
             return prevMessages;
           }
@@ -80,6 +85,13 @@ const Chatbox = ({ user, selectedUserChat }) => {
     }
   };
 
+  const handleMenuOpen = (event, msg) => {
+    const rect = event.target.getBoundingClientRect();
+    setMenuPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
+    setSelectedMessage(msg.message); // Fix: Store only the message text
+    setMenuOpen(true);
+  };
+
   return (
     <div className="flex flex-col w-full h-full">
       <div className="px-4 py-2 bg-white text-black font-semibold rounded-t-lg border-b border-gray-200">
@@ -90,11 +102,12 @@ const Chatbox = ({ user, selectedUserChat }) => {
         {messages.map((msg, index) => (
           <div
             key={index}
-            className={`p-3 rounded-lg max-w-xs ${
+            className={`relative group p-3 rounded-lg max-w-xs ${
               msg.sender === user?.name ? "bg-blue-100 text-right self-end" : "bg-gray-100 text-left self-start"
             }`}
           >
             <p className="font-semibold text-sm">{msg.sender}</p>
+
             {msg.message.includes("[") && msg.message.includes("](") ? (
               <a
                 href={msg.message.match(/\((.*?)\)/)[1]} // Extract URL from message
@@ -107,9 +120,20 @@ const Chatbox = ({ user, selectedUserChat }) => {
             ) : (
               <p className="text-sm">{msg.message}</p>
             )}
+
+            {/* Three Dots Button */}
+            <div
+              className="absolute top-2 left-4 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              onClick={(e) => handleMenuOpen(e, msg)}
+            >
+              <span className="text-gray-600 text-lg">⋮</span>
+            </div>
           </div>
         ))}
       </div>
+
+      {/* Pop-up Menu Component */}
+      <MessageMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} position={menuPosition} message={selectedMessage} />
 
       {selectedUserChat && (
         <div className="flex items-center px-4 py-2 border-t border-gray-300 bg-white">
@@ -147,9 +171,7 @@ const Chatbox = ({ user, selectedUserChat }) => {
 
       {file && <FileUpload file={file} onUpload={handleUpload} onClose={() => setFile(null)} />}
 
-      {notification && (
-        <CustomNotification sender={notification.sender} message={notification.message} onClose={() => setNotification(null)} />
-      )}
+      {notification && <CustomNotification sender={notification.sender} message={notification.message} onClose={() => setNotification(null)} />}
     </div>
   );
 };
